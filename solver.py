@@ -10,11 +10,24 @@ def solve(start, goal, method):
     if 'DFS' in method.upper():
         None
     elif 'BFS' in method.upper():
-        bfs.solve(start, goal)
+        cost, steps = bfs.solve(start, goal)
     elif 'DIJ' in method.upper():
         None
     else:
         print(f'Error {method} is an unrecognized method')
+        return
+
+    print(f'The overall cost was: {cost} moves')
+    for i in steps:
+        print_matrix(i)
+        print()
+    
+#print out an n x n matrix
+def print_matrix(matrix):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            print(matrix[i][j], end=' ')
+        print()
 
 #given 2 n x n matrices check if the problem is solvable: return true if solvable
 def is_solvable(start, goal):

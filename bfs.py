@@ -1,35 +1,31 @@
+import utils
+
 #solve using bfs approach
 def solve(start, goal):
     cost = 0
-    if is_equal(start, goal):
-        return cost
+    if utils.is_equal(start, goal):
+        return cost, []
     
-    #bfs queue // list, use append and pop methods to simulate queue behavior
+    visited_steps = []
+    steps = []
     queue = []
-
-    #coords of the 0 in start matrix
-    queue.append(find_zero(start))
+    #first = utils.step(start)
+    queue.append(utils.step(start))
+    count = 1
     
-    while len(queue) > 0:
-        state = queue.pop()
-        i, j = state
-        if start[i][j] != goal[i][j]:
-            None
+    while queue:
+        curr = queue.pop(0)
+        cost += 1
+        if utils.is_equal(curr.state, goal):
+            return cost, utils.get_step_list(curr)
+        else:
+            #if utils.is_visited(curr.state, visited_steps):
+                #continue
+            visited_steps.append(curr)
+            moves = curr.find_moves(visited_steps)
+            for i in range(len(moves)):
+                move = moves[i]
+                temp = utils.step(move, curr)
+                queue.append(temp)
 
-
-
-#given a start and a goal state return if the matrices are equal
-def is_equal(start, goal):
-    for i in range(len(start)):
-        for j in range(len(start[0])):
-            if start[i][j] != goal[i][j]:
-                return False
-    return True
-
-#find the index of the 0 (empty space) in the matrix
-def find_zero(matrix):
-    for i in range(len(matrix)):
-        for j in range(len(matrix[0])):
-            if matrix[i][j] == 0:
-                return i, j
-    return -1, -1
+    return -1, []

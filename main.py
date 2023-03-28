@@ -34,7 +34,6 @@ def main():
         [8, 0, 4], 
         [7, 6, 5]
     ]
-    print_matrix(start)
     solver.solve(start, goal, 'BFS')
 
 if __name__ == "__main__":
