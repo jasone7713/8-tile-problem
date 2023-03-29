@@ -9,19 +9,16 @@ def solve(start, goal):
     visited_steps = []
     steps = []
     queue = []
-    #first = utils.step(start)
     queue.append(utils.step(start))
     count = 1
     
     while queue:
         curr = queue.pop(0)
-        cost += 1
         if utils.is_equal(curr.state, goal):
-            return cost, utils.get_step_list(curr)
+            #returns count, step_list as a tuple
+            return utils.get_step_list(curr)
         else:
-            #if utils.is_visited(curr.state, visited_steps):
-                #continue
-            visited_steps.append(curr)
+            utils.insert_matrix(curr, visited_steps)
             moves = curr.find_moves(visited_steps)
             for i in range(len(moves)):
                 move = moves[i]

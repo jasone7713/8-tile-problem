@@ -46,10 +46,12 @@ class step:
 #given a state, return the path taken to get there
 def get_step_list(step):
     step_list = []
+    count = 0
     while step is not None:
         step_list.insert(0, step.state)
         step = step.parent
-    return step_list
+        count += 1
+    return count - 1, step_list
 
 #given a matrix and start/end coords, create a copied version that has the start/end coords swapped
 def swap(matrix, start_row, start_column, end_row, end_column):
@@ -82,9 +84,34 @@ def print_matrix(matrix):
         print()
     print()
 
+#return if a node has beenm visited or not
 def is_visited(matrix, visited_steps):
-    for i in visited_steps:
-        curr = i.state
+    low = 0
+    high = len(visited_steps) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+        curr = visited_steps[mid].state
+
         if is_equal(matrix, curr):
             return True
+        elif matrix < curr:
+            high = mid - 1
+        else:
+            low = mid + 1
+
     return False
+
+
+def insert_matrix(step, visited_steps):
+    matrix = step.state
+    low = 0
+    high = len(visited_steps) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        if visited_steps[mid].state < matrix:
+            low = mid + 1
+        elif visited_steps[mid].state >= matrix:
+            high = mid - 1
+    visited_steps.insert(low, step)
+    
