@@ -2,9 +2,10 @@ import copy as copier
 
 #class which holds a saved step of the puzzle
 class step:
-    def __init__(self, state, parent = None):
+    def __init__(self, state, cost = 1, parent = None):
         self.state = state
         self.parent = parent
+        self.cost = cost
         self.future_states = []
     
     def find_zero(self):
@@ -42,6 +43,68 @@ class step:
                 moves.append(temp)
             
         return moves
+    
+    #(for dijkstra's) given a matrix and i & j coords, return a list of the valid moves preserving left, up, right, down order
+    def find_moves_and_costs(self, visited_steps, curr):
+        i, j = self.find_zero()
+        matrix = self.state
+        moves = []
+        costs = []
+
+        #left move valid
+        if j > 0:
+            temp = swap(matrix, i, j, i, j - 1)
+            cost = matrix[i][j - 1]
+
+            flag = is_visited(temp, visited_steps)
+            if flag is None:
+                moves.append(temp)
+                costs.append(cost)
+            else:
+                if cost + curr.cost < flag.cost and curr is not None:
+                    flag.cost = cost + curr.cost
+                    flag.parent = curr
+        #up move valid
+        if i > 0:
+            temp = swap(matrix, i, j, i - 1, j)
+            cost = matrix[i - 1][j]
+            flag = is_visited(temp, visited_steps)
+            if flag is None:
+                moves.append(temp)
+                costs.append(cost)
+            else:
+                if cost + curr.cost < flag.cost and curr is not None:
+                    flag.cost = cost + curr.cost
+                    flag.parent = curr
+
+        #right move valid
+        if j < (len(matrix[0]) - 1):
+            temp = swap(matrix, i, j, i, j + 1)
+            cost = matrix[i][j + 1]
+            flag = is_visited(temp, visited_steps)
+            if flag is None:
+                moves.append(temp)
+                costs.append(cost)
+            else:
+                if cost + curr.cost < flag.cost and curr is not None:
+                    flag.cost = cost + curr.cost
+                    flag.parent = curr
+
+        #down move valid
+        if i < (len(matrix) - 1):
+            temp = swap(matrix, i, j, i + 1, j)
+            cost = matrix[i + 1][j]
+            flag = is_visited(temp, visited_steps)
+            if flag is None:
+                moves.append(temp)
+                costs.append(cost)
+            else:
+                if cost + curr.cost < flag.cost and curr is not None:
+                    flag.cost = cost + curr.cost
+                    flag.parent = curr
+            
+        #return possible moves list and cost of each move
+        return moves, costs
 
 #given a state, return the path taken to get there
 def get_step_list(step):
@@ -51,6 +114,16 @@ def get_step_list(step):
         step_list.insert(0, step.state)
         step = step.parent
         count += 1
+    return count - 1, step_list
+
+#separate get_step_list for Dijkstra's
+def get_step_list_DIJ(step):
+    step_list = []
+    count = 0
+    while step is not None:
+        step_list.insert(0, step.state)
+        count += step.cost
+        step = step.parent
     return count - 1, step_list
 
 #given a matrix and start/end coords, create a copied version that has the start/end coords swapped

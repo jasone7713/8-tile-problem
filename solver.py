@@ -10,7 +10,7 @@ def solve(start, goal, method):
         return
     start_time = time.time()
     if 'DFS' in method.upper():
-        None
+        cost, steps = dfs.solve_iterative(start, goal)
     elif 'BFS' in method.upper():
         cost, steps = bfs.solve(start, goal)
     elif 'DIJ' in method.upper():
