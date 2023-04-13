@@ -22,7 +22,7 @@ def solve(start, goal):
             moves = curr.find_moves(visited_steps)
             for i in range(len(moves)):
                 move = moves[i]
-                temp = utils.step(move, curr)
+                temp = utils.step(move, parent=curr)
                 queue.append(temp)
 
     return -1, []

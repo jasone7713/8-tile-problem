@@ -30,12 +30,12 @@ def main():
     file = open(input)
     start = read_matrix(file)
     goal = [
-        [0, 1, 2], 
-        [3, 4, 5], 
-        [6, 7, 8]
+        [1, 2, 3], 
+        [8, 0, 4], 
+        [7, 6, 5]
     ]
     print_matrix(start)
-    solver.solve(start, goal, 'BFS')
+    solver.solve(start, goal, 'DIJ')
 
 if __name__ == "__main__":
     main()
