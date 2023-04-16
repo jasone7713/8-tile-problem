@@ -33,8 +33,8 @@ def main():
 
     #get input file if provided, or use default
     input = 'input.txt'
-    if len(sys.argv) > 3:
-        input = sys.argv[3]
+    if len(sys.argv) > 2:
+        input = sys.argv[2]
 
     #open input file and read the matrix 
     file = open(input)
