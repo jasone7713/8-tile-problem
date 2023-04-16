@@ -22,20 +22,36 @@ def print_matrix(matrix):
 
 #main function
 def main():
+    #check if cmd line input was passed
+    if len(sys.argv) < 2:
+        print('Invalid input. Please provide an input in the form of: python main.py BFS|DFS|DIJ <input_file>')
+        return
+    
+    #get the algo from cmd line input argv[1]
+    algo = 'BFS'
+    algo = sys.argv[1].upper()
+
     #get input file if provided, or use default
     input = 'input.txt'
-    if len(sys.argv) > 1:
-        input = sys.argv[1]
+    if len(sys.argv) > 3:
+        input = sys.argv[3]
 
+    #open input file and read the matrix 
     file = open(input)
     start = read_matrix(file)
+
+    #default goal matrix
     goal = [
         [1, 2, 3], 
         [8, 0, 4], 
         [7, 6, 5]
     ]
+
+    print('Solving with the input matrix:')
     print_matrix(start)
-    solver.solve(start, goal, 'DIJ')
+
+    #call solver and pass in the algorithm type
+    solver.solve(start, goal, algo)
 
 if __name__ == "__main__":
     main()
