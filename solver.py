@@ -4,28 +4,40 @@ import dijkstra
 import time
 
 #solve the puzzle given a start state, end start, and method => 'BFS', 'DFS', 'DIJ'
-def solve(start, goal, method):
+def solve(start, goal, method, quiet=False):
+
+    #check if the problem is solvable before proceeding
     if not is_solvable(start, goal):
         print('Error: the problem is not solvable')
         return
+    
+    #log start time for testing
     start_time = time.time()
+
+    #call algorithms based on provided algo
     if 'DFS' in method.upper():
         cost, steps = dfs.solve_iterative(start, goal)
     elif 'BFS' in method.upper():
         cost, steps = bfs.solve(start, goal)
     elif 'DIJ' in method.upper():
-        None
+        cost, steps = dijkstra.solve(start, goal)
     else:
         print(f'Error {method} is an unrecognized method')
         return
 
+    #log and print end time
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Elapsed time: {elapsed_time} seconds.")
-    print(f'The overall cost was: {cost} moves')
-    for i in steps:
-        print_matrix(i)
-        print()
+    print(f"Elapsed time: {elapsed_time} seconds.", end='\n\n')
+
+    #print the moves and the cost to solve (if quiet set to true do not ouput)
+    if not quiet:
+        for i in steps:
+            print_matrix(i)
+            print()
+    print(f'The overall cost for solving with {method} was: {cost} moves. See above for the moves taken')
+
+#BELOW THIS POINT ARE HELPER FUNCTIONS USED BY SOLVE
     
 #print out an n x n matrix
 def print_matrix(matrix):
@@ -49,13 +61,16 @@ def is_solvable(start, goal):
 def is_valid_matrix(matrix):
     n = len(matrix)
 
+    #map how many times each value occurs
     direct_map = [0] * (n * n)
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
             val = matrix[i][j]
-            if val < 0 or val > ((n * n)- 1):
+            if val < 0 or val > ((n * n)- 1):   #0-9 check
                 return False
             direct_map[val] += 1
+
+    #0 - 9 must occur exactly once, else rreturn false
     for i in direct_map:
         if i != 1:
             return False
@@ -68,10 +83,12 @@ def inversion_count(matrix):
     n = m * m
     data = []
 
+    #make a 1D list of all numbers in matrix -- this is just to make the inversion counter simpler to run
     for i in range(m):
         for j in range(m):
             data.append(matrix[i][j])
 
+    #count the number of inversions that occur in the list
     for i in range(n):
         for j in range(i, n):
             if data[i] != 0 and data[j] != 0:
