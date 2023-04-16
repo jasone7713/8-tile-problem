@@ -66,7 +66,7 @@ class step:
             else:
                 if cost + curr.cost < flag.cost and curr is not None:
                     flag.cost = cost + curr.cost
-                    flag.parent = curr
+                    #flag.parent = curr
         #up move valid
         if i > 0:
             temp = swap(matrix, i, j, i - 1, j)
@@ -78,7 +78,7 @@ class step:
             else:
                 if cost + curr.cost < flag.cost and curr is not None:
                     flag.cost = cost + curr.cost
-                    flag.parent = curr
+                    #flag.parent = curr
 
         #right move valid
         if j < (len(matrix[0]) - 1):
@@ -91,7 +91,7 @@ class step:
             else:
                 if cost + curr.cost < flag.cost and curr is not None:
                     flag.cost = cost + curr.cost
-                    flag.parent = curr
+                    #flag.parent = curr
 
         #down move valid
         if i < (len(matrix) - 1):
@@ -104,7 +104,7 @@ class step:
             else:
                 if cost + curr.cost < flag.cost and curr is not None:
                     flag.cost = cost + curr.cost
-                    flag.parent = curr
+                    #flag.parent = curr
             
         #return possible moves list and cost of each move
         return moves, costs
@@ -129,7 +129,7 @@ def get_step_list_DIJ(step):
         step_list.insert(0, step.state)
         count += step.cost
         step = step.parent
-    return count - 1, step_list
+    return count, step_list
 
 #given a matrix and start/end coords, create a copied version that has the start/end coords swapped
 def swap(matrix, start_row, start_column, end_row, end_column):
@@ -179,13 +179,13 @@ def is_visited(matrix, visited_steps):
         curr = visited_steps[mid].state
 
         if is_equal(matrix, curr):
-            return True
+            return visited_steps[mid]
         elif matrix < curr:
             H = mid - 1
         else:
             L = mid + 1
 
-    return False
+    return None
 
 #insert a step into the sorted visited_steps list using binary search
 def insert_matrix(step, visited_steps):
@@ -203,4 +203,21 @@ def insert_matrix(step, visited_steps):
 
     #insert new step in found L index
     visited_steps.insert(L, step)
-    
+
+
+#insert a step into the sorted visited_steps list using binary search
+def insert_priority(step, visited_steps):
+    cost = step.cost
+    L = 0
+    H = len(visited_steps) - 1
+
+    #binary search for index to place new step
+    while L <= H:
+        mid = (L + H) // 2
+        if visited_steps[mid].cost< cost:
+            L = mid + 1
+        elif visited_steps[mid].cost >= cost:
+            H = mid - 1
+
+    #insert new step in found L index
+    visited_steps.insert(L, step)
