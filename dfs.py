@@ -36,7 +36,7 @@ def recurse(current, goal, visited_steps):
 def solve_iterative(start, goal):
     cost = 0
     if utils.is_equal(start, goal):
-        return cost, [utils.step(start)]
+        return cost, []
     
     #sorted list of visited puzzle states
     visited_steps = []

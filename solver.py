@@ -35,7 +35,8 @@ def solve(start, goal, method, quiet=False):
         for i in steps:
             print_matrix(i)
             print()
-    print(f'The overall cost for solving with {method} was: {cost} moves. See above for the moves taken')
+    
+    print(f'The overall cost for solving with {method} was: {cost}. See above for the moves taken')
 
 #BELOW THIS POINT ARE HELPER FUNCTIONS USED BY SOLVE
     
