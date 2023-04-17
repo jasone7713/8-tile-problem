@@ -58,25 +58,28 @@ class step:
         if j > 0:
             temp = swap(matrix, i, j, i, j - 1)
             cost = matrix[i][j - 1]
+            cost += curr.cost
 
             flag = is_visited(temp, visited_steps)
             if flag is None:
                 moves.append(temp)
                 costs.append(cost)
             else:
-                if cost + curr.cost < flag.cost and curr is not None:
+                if cost < flag.cost and curr is not None:
                     flag.cost = cost + curr.cost
                     #flag.parent = curr
         #up move valid
         if i > 0:
             temp = swap(matrix, i, j, i - 1, j)
             cost = matrix[i - 1][j]
+            cost += curr.cost
+
             flag = is_visited(temp, visited_steps)
             if flag is None:
                 moves.append(temp)
                 costs.append(cost)
             else:
-                if cost + curr.cost < flag.cost and curr is not None:
+                if cost < flag.cost and curr is not None:
                     flag.cost = cost + curr.cost
                     #flag.parent = curr
 
@@ -84,12 +87,14 @@ class step:
         if j < (len(matrix[0]) - 1):
             temp = swap(matrix, i, j, i, j + 1)
             cost = matrix[i][j + 1]
+            cost += curr.cost
+
             flag = is_visited(temp, visited_steps)
             if flag is None:
                 moves.append(temp)
                 costs.append(cost)
             else:
-                if cost + curr.cost < flag.cost and curr is not None:
+                if cost < flag.cost and curr is not None:
                     flag.cost = cost + curr.cost
                     #flag.parent = curr
 
@@ -97,12 +102,14 @@ class step:
         if i < (len(matrix) - 1):
             temp = swap(matrix, i, j, i + 1, j)
             cost = matrix[i + 1][j]
+            cost += curr.cost
+
             flag = is_visited(temp, visited_steps)
             if flag is None:
                 moves.append(temp)
                 costs.append(cost)
             else:
-                if cost + curr.cost < flag.cost and curr is not None:
+                if cost < flag.cost and curr is not None:
                     flag.cost = cost + curr.cost
                     #flag.parent = curr
             
@@ -118,18 +125,21 @@ def get_step_list(step):
     while step is not None:
         step_list.insert(0, step.state)
         step = step.parent
-        count += 1
+        count += 1  #in bfs and dfs the cost of each move is just 1
+
     return count - 1, step_list
 
 #separate get_step_list for Dijkstra's // same as normal step_list except cost of each move is not 1
 def get_step_list_DIJ(step):
     step_list = []
-    count = 0
+    cost = step.cost
+
+    #traverse back-links until parent is none (start state found)
     while step is not None:
         step_list.insert(0, step.state)
-        count += step.cost
         step = step.parent
-    return count, step_list
+
+    return cost, step_list
 
 #given a matrix and start/end coords, create a copied version that has the start/end coords swapped
 def swap(matrix, start_row, start_column, end_row, end_column):
@@ -205,19 +215,19 @@ def insert_matrix(step, visited_steps):
     visited_steps.insert(L, step)
 
 
-#insert a step into the sorted visited_steps list using binary search
-def insert_priority(step, visited_steps):
+#insert a step into the sorted queue list using binary search -- used to hold priority queue 
+def insert_priority(step, queue):
     cost = step.cost
     L = 0
-    H = len(visited_steps) - 1
+    H = len(queue) - 1
 
     #binary search for index to place new step
     while L <= H:
         mid = (L + H) // 2
-        if visited_steps[mid].cost< cost:
+        if queue[mid].cost < cost:
             L = mid + 1
-        elif visited_steps[mid].cost >= cost:
+        elif queue[mid].cost >= cost:
             H = mid - 1
 
     #insert new step in found L index
-    visited_steps.insert(L, step)
+    queue.insert(L, step)
